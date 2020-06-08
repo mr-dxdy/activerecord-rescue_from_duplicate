@@ -67,13 +67,13 @@ module RescueFromDuplicate::ActiveRecord
     end
 
     def sqlite3_exception_columns(exception)
-      extract_columns(exception.message[/columns? (.*) (?:is|are) not unique/, 1]) || 
+      extract_columns(exception.message[/columns? (.*) (?:is|are) not unique/, 1]) ||
       extract_columns(exception.message[/UNIQUE constraint failed: ([^:]*)\:/, 1])
     end
 
     def extract_columns(columns_string)
       return unless columns_string
-      columns_string.split(",").map { |column| column.split('.').last.strip }
+      columns_string.split(",").map { |column| column.split('.').last.gsub('"', '').strip }
     end
 
     def other_exception_columns(exception)
