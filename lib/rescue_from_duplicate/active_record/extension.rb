@@ -62,8 +62,13 @@ module RescueFromDuplicate::ActiveRecord
       end
     end
 
+    # TODO: Multilanguage?
+    # https://github.com/Shopify/activerecord-rescue_from_duplicate/issues/10
     def postgresql_exception_columns(exception)
-      extract_columns(exception.message[/Key \((.*?)\)=\(.*?\) already exists./, 1])
+      columns_string = exception.message[/Key \((.*?)\)=\(.*?\) already exists./, 1]
+      columns_string ||= exception.message[/Ключ "\((.*?)\)=\(.*?\)" уже существует./, 1]
+
+      extract_columns columns_string
     end
 
     def sqlite3_exception_columns(exception)
